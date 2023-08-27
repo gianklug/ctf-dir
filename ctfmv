@@ -29,21 +29,26 @@ FILES=$(find "$DOWNLOADS_DIR" -type f -mmin -$THRESHOLD_MINUTES)
 # Move every file to the CTF directory
 for FILE in "${FILES[@]}"; do
     # Move the file to the CTF directory
+    [ -f "$FILE" ] || continue
     echo "Moving '$FILE'"
     mv "$FILE" "$CTF_DIR/$CTF_NAME"
 done
 
 # Unzip tar and zip files
 cd "$CTF_DIR/$CTF_NAME" || exit
-TAR_FILES=$(find . -type f -name '*.tar*')
+TAR_FILES=$(find . -type f -name '*.tar.gz')
 ZIP_FILES=$(find . -type f -name '*.zip')
 
 for TAR_FILE in "${TAR_FILES[@]}"; do
+    [ -f "$TAR_FILE" ] || continue
+    echo "Extracting '$TAR_FILE'"
     tar -xf "$TAR_FILE"
     rm "$TAR_FILE"
 done
 
 for ZIP_FILE in "${ZIP_FILES[@]}"; do
+    [ -f "$ZIP_FILE" ] || continue
     unzip "$ZIP_FILE"
+    echo "Extracting '$ZIP_FILE'"
     rm "$ZIP_FILE"
 done
