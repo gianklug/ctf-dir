@@ -3,7 +3,7 @@
 Small bash helper scripts to better manage files for CTF challenges
 
 ### Features
-* Move all files from the last `n` minutes to a directory per challenge
+* Move all files from the last `n` minutes in your downloads to a directory per challenge
 * FZF for choosing an existing challenge
 * Auto unzip/untar archives
 
