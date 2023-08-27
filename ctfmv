@@ -1,0 +1,49 @@
+#!/bin/bash
+
+DOWNLOADS_DIR=${XDG_DOWNLOAD_DIR:-"$HOME/Downloads"}
+CTF_DIR="$HOME/ctf"
+# Maximum age of files to copy
+THRESHOLD_MINUTES=3
+
+# Create CTF directory if it doesn't exist
+if [ ! -d "$CTF_DIR" ]; then
+    mkdir "$CTF_DIR"
+fi
+
+# If no argument is supplied, fzf in the CTF dir
+if [ $# -eq 0 ]; then
+    cd "$CTF_DIR" || exit
+    CTF_NAME=$(find . -mindepth 1 -type d | fzf | cut -d '/' -f 2)
+else
+    CTF_NAME="$1"
+fi
+
+# Create the CTF directory if it doesn't exist yet
+if [ ! -d "$CTF_DIR/$CTF_NAME" ]; then
+    mkdir "$CTF_DIR/$CTF_NAME"
+fi
+
+# Find all files in the downloads folder that were modified recently
+FILES=$(find "$DOWNLOADS_DIR" -type f -mmin -$THRESHOLD_MINUTES)
+
+# Move every file to the CTF directory
+for FILE in "${FILES[@]}"; do
+    # Move the file to the CTF directory
+    echo "Moving '$FILE'"
+    mv "$FILE" "$CTF_DIR/$CTF_NAME"
+done
+
+# Unzip tar and zip files
+cd "$CTF_DIR/$CTF_NAME" || exit
+TAR_FILES=$(find . -type f -name '*.tar*')
+ZIP_FILES=$(find . -type f -name '*.zip')
+
+for TAR_FILE in "${TAR_FILES[@]}"; do
+    tar -xf "$TAR_FILE"
+    rm "$TAR_FILE"
+done
+
+for ZIP_FILE in "${ZIP_FILES[@]}"; do
+    unzip "$ZIP_FILE"
+    rm "$ZIP_FILE"
+done

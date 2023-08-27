@@ -1,0 +1,18 @@
+#!/bin/bash
+
+CTF_DIR="$HOME/ctf"
+
+# Create CTF directory if it doesn't exist
+if [ ! -d "$CTF_DIR" ]; then
+    mkdir "$CTF_DIR"
+fi
+
+# If no argument is supplied, fzf in the CTF dir
+if [ $# -eq 0 ]; then
+    cd "$CTF_DIR" || exit
+    CTF_NAME=$(find . -mindepth 1 -type d | fzf | cut -d '/' -f 2)
+else
+    CTF_NAME="$1"
+fi
+
+cd "$CTF_DIR/$CTF_NAME" || exit
