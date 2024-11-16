@@ -20,7 +20,7 @@ fi
 
 # Create the CTF directory if it doesn't exist yet
 if [ ! -d "$CTF_DIR/$CTF_NAME" ]; then
-    mkdir "$CTF_DIR/$CTF_NAME"
+    mkdir -p "$CTF_DIR/$CTF_NAME"
 fi
 
 # Find all files in the downloads folder that were modified recently
@@ -52,3 +52,10 @@ for ZIP_FILE in "${ZIP_FILES[@]}"; do
     echo "Extracting '$ZIP_FILE'"
     rm "$ZIP_FILE"
 done
+
+# Flatten directory structure if only one directory was in the archive
+if [ "$(find . -maxdepth 1 -type d | wc -l)" -eq 2 ]; then
+    dirname=$(find . -maxdepth 1 -type d | tail -n 1)
+    mv "$dirname"/* .
+    rm -r "$dirname"
+fi

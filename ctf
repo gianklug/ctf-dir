@@ -9,10 +9,10 @@ fi
 
 # If no argument is supplied, fzf in the CTF dir
 if [ $# -eq 0 ]; then
-    cd "$CTF_DIR" || exit
+    cd "$CTF_DIR" || return
     CTF_NAME=$(find . -mindepth 1 -type d | fzf | cut -d '/' -f 2)
 else
     CTF_NAME="$1"
 fi
 
-cd "$CTF_DIR/$CTF_NAME" || exit
+cd "$CTF_DIR/$CTF_NAME" || return
