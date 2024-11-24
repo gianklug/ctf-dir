@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp {ctf,ctfmv} "$HOME/.local/bin/"
+cp {ctf,ctfmv,mvhere} "$HOME/.local/bin/"
 
 shopt -s extglob
 

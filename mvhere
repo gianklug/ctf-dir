@@ -1,0 +1,34 @@
+#!/bin/bash
+
+DOWNLOADS_DIR=${XDG_DOWNLOAD_DIR:-"$HOME/Downloads"}
+# Maximum age of files to copy
+THRESHOLD_MINUTES=3
+
+# Find all files in the downloads folder that were modified recently
+FILES=$(find "$DOWNLOADS_DIR" -type f -mmin -$THRESHOLD_MINUTES)
+
+# Move every file to the current directory
+for FILE in "${FILES[@]}"; do
+    # Move the file to the current directory
+    [ -f "$FILE" ] || continue
+    echo "Moving '$FILE'"
+    mv "$FILE" "."
+done
+
+# Unzip tar and zip files
+TAR_FILES=$(find . -type f -name '*.tar.gz')
+ZIP_FILES=$(find . -type f -name '*.zip')
+
+for TAR_FILE in "${TAR_FILES[@]}"; do
+    [ -f "$TAR_FILE" ] || continue
+    echo "Extracting '$TAR_FILE'"
+    tar -xf "$TAR_FILE"
+    rm "$TAR_FILE"
+done
+
+for ZIP_FILE in "${ZIP_FILES[@]}"; do
+    [ -f "$ZIP_FILE" ] || continue
+    unzip "$ZIP_FILE"
+    echo "Extracting '$ZIP_FILE'"
+    rm "$ZIP_FILE"
+done
